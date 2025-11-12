@@ -7,7 +7,10 @@ abstract class Routes {
   
   static const dashboard = Paths.home + Paths.dashboard; // <-- تم التعديل
   static const units = Paths.home + Paths.units;
-  static const menus = Paths.home + Paths.menus; // <-- تم التعديل
+  static const menus = Paths.home + Paths.menus;
+  static const additions = Paths.home + Paths.additions; 
+  static const sections = Paths.home + Paths.sections;
+  static const items = Paths.home + Paths.items; // <-- تم التعديل
   
   // (سنضيف باقي المسارات هنا)
 }
@@ -20,4 +23,7 @@ abstract class Paths {
   static const dashboard = '/dashboard';
   static const units = '/units';
   static const menus = '/menus';
+  static const additions = '/additions';
+  static const sections = '/sections';
+  static const items = '/items';
 }

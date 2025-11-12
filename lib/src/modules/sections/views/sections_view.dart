@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// (تأكد أن المسارات صحيحة)
 import 'package:one_click/src/shared/constants/app_colors.dart';
 import 'package:one_click/src/shared/widgets/content_header.dart';
-import 'package:one_click/src/modules/home/controllers/home_controller.dart';
-import '../controllers/menus_controller.dart';
-import '../models/menu_model.dart'; // (استيراد النموذج الجديد)
+import 'package:one_click/src/modules/home/controllers/home_controller.dart'; 
+import '../controllers/sections_controller.dart'; // <-- (تم التغيير)
 
-class MenusView extends GetView<MenusController> {
-  const MenusView({super.key});
+class SectionsView extends GetView<SectionsController> { // <-- (تم التغيير)
+  const SectionsView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +18,7 @@ class MenusView extends GetView<MenusController> {
         children: [
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-            child: ContentHeader(),
+            child: ContentHeader(), //
           ),
           const SizedBox(height: 20),
 
@@ -31,14 +29,16 @@ class MenusView extends GetView<MenusController> {
                 _buildPageTitleBar(),
                 const SizedBox(height: 20),
 
+                // منطقة الفلترة (تظهر وتختفي)
                 _buildFilterArea(),
 
+                // --- الديزاين بالحواف الدائرية ---
                 Container(
                   width: double.infinity,
-                  clipBehavior: Clip.antiAlias,
+                  clipBehavior: Clip.antiAlias, 
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(16.0),
+                    borderRadius: BorderRadius.circular(16.0), 
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black12,
@@ -51,15 +51,17 @@ class MenusView extends GetView<MenusController> {
                     children: [
                       SizedBox(
                         width: double.infinity,
-                        child: Obx(() => _buildCustomTable()),
+                        // (الجدول بـ 6 أعمدة)
+                        child: Obx(() => _buildCustomTable()), 
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        child: _buildPaginationControls(),
+                        child: _buildPaginationControls(), // أزرار الصفحات
                       ),
                     ],
                   ),
                 ),
+                // --- نهاية الديزاين ---
                 const SizedBox(height: 20),
               ],
             ),
@@ -69,24 +71,20 @@ class MenusView extends GetView<MenusController> {
     );
   }
 
-  // (دالة ترتيب العنوان)
-  // استبدل دالة _buildPageTitleBar الحالية بالدالة دي
+  // دالة العنوان والفلتر
   Widget _buildPageTitleBar() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // الآن العنوان أولاً (على اليمين في واجهة RTL)
         const Text(
-          'المنيوهات',
+          'الأقسام', // <-- (تم التغيير)
           textAlign: TextAlign.right,
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: AppColors.primary,
+            color: AppColors.primary, //
           ),
         ),
-
-        // ثم زر الفلتر (سيظهر على اليسار)
         ElevatedButton(
           onPressed: () {
             controller.toggleFilterVisibility();
@@ -96,7 +94,7 @@ class MenusView extends GetView<MenusController> {
               borderRadius: BorderRadius.circular(8),
             ),
             padding: const EdgeInsets.all(12),
-            backgroundColor: AppColors.primary,
+            backgroundColor: AppColors.primary, //
             foregroundColor: Colors.white,
           ),
           child: const Icon(Icons.filter_list, size: 20),
@@ -105,7 +103,7 @@ class MenusView extends GetView<MenusController> {
     );
   }
 
-  // (منطقة الفلترة - الكود كما هو)
+  // دالة الفلترة (يمكنك تعديلها لاحقاً)
   Widget _buildFilterArea() {
     return Obx(() {
       return Visibility(
@@ -124,46 +122,14 @@ class MenusView extends GetView<MenusController> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               const Text(
-                'المحافظة',
+                'اسم القسم', // <-- (تم التغيير)
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               TextFormField(
                 textAlign: TextAlign.right,
                 decoration: InputDecoration(
-                  hintText: '...اختار',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'المدينة',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                textAlign: TextAlign.right,
-                decoration: InputDecoration(
-                  hintText: '...اختار',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'البرنامج',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                textAlign: TextAlign.right,
-                decoration: InputDecoration(
-                  hintText: '...اختار',
+                  hintText: '...ابحث بالاسم',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -174,9 +140,7 @@ class MenusView extends GetView<MenusController> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: ElevatedButton.icon(
-                  onPressed: () {
-                    /* TODO: Apply filter */
-                  },
+                  onPressed: () { /* TODO: Apply filter */ },
                   icon: const Icon(Icons.search, color: Colors.white),
                   label: const Text('بحث'),
                   style: ElevatedButton.styleFrom(
@@ -197,20 +161,22 @@ class MenusView extends GetView<MenusController> {
     });
   }
 
-  // --- (جديد) دالة بناء الجدول باستخدام Table ---
+  // --- 🌟 دالة بناء الجدول (معدلة 6 أعمدة + Bold) 🌟 ---
   Widget _buildCustomTable() {
+    // (العناوين Bold)
     const TextStyle headerStyle = TextStyle(
-      fontSize: 14.0,
+      fontSize: 14.0, 
       color: Colors.white,
       fontWeight: FontWeight.bold,
       fontFamily: 'Cairo',
     );
 
+    // (السطور Bold)
     const TextStyle bodyStyle = TextStyle(
-      fontSize: 14.0,
+      fontSize: 14.0, 
       color: Colors.black87,
       fontFamily: 'Cairo',
-      fontWeight: FontWeight.bold,
+      fontWeight: FontWeight.bold, 
     );
 
     final Color borderColor = Colors.grey.shade300;
@@ -218,39 +184,52 @@ class MenusView extends GetView<MenusController> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Table(
-        // عمودين فقط: # و اسم المينو
+        // (6 أعمدة)
         columnWidths: const {
-          0: FixedColumnWidth(60.0), // #
-          1: FixedColumnWidth(320.0), // اسم المينو
+          0: FixedColumnWidth(50.0),  // #
+          1: FixedColumnWidth(100.0), // اسم القسم
+          2: FixedColumnWidth(120.0), // الوصف
+          3: FixedColumnWidth(100.0), // قسم اضافات؟
+          4: FixedColumnWidth(120.0), // المنيو
+          5: FixedColumnWidth(80.0),  // الفرع
         },
         border: TableBorder.all(
           color: borderColor,
           width: 1.0,
-          borderRadius: BorderRadius.zero,
+          borderRadius: BorderRadius.zero, 
         ),
-
         children: [
-          // رأس الجدول
+          // رأس الجدول (6 أعمدة مطابقة للصورة)
           TableRow(
-            decoration: const BoxDecoration(color: AppColors.primary),
+            decoration: const BoxDecoration(
+              color: AppColors.primary, //
+            ),
             children: [
               _buildHeaderCell('#', headerStyle),
-              _buildHeaderCell('اسم المينو', headerStyle),
+              _buildHeaderCell('اسم القسم', headerStyle),
+              _buildHeaderCell('الوصف', headerStyle),
+              _buildHeaderCell('قسم اضافات؟', headerStyle),
+              _buildHeaderCell('المنيو', headerStyle),
+              _buildHeaderCell('الفرع', headerStyle),
             ],
           ),
-
-          // صفوف البيانات (من الكنترولر)
-          ...controller.menus.map((menu) {
+          
+          // صفوف البيانات
+          ...controller.sections.map((section) {
             return TableRow(
               decoration: BoxDecoration(
-                color:
-                    controller.menus.indexOf(menu).isEven
-                        ? Colors.white
-                        : Colors.grey.shade50,
+                color: controller.sections.indexOf(section).isEven
+                    ? Colors.white
+                    : Colors.grey.shade50, 
               ),
               children: [
-                _buildBodyCell(menu.id.toString(), bodyStyle),
-                _buildBodyCell(menu.name, bodyStyle),
+                _buildBodyCell(section.id, bodyStyle),
+                _buildBodyCell(section.name, bodyStyle),
+                _buildBodyCell(section.description, bodyStyle),
+                // استخدام دالة الـ Checkbox
+                _buildCheckboxCell(section.isAdditionsSection), 
+                _buildBodyCell(section.menu, bodyStyle),
+                _buildBodyCell(section.branch, bodyStyle),
               ],
             );
           }).toList(),
@@ -259,13 +238,17 @@ class MenusView extends GetView<MenusController> {
     );
   }
 
-  // --- (دوال مساعدة لبناء خلايا الـ Table) ---
+  // --- (دوال مساعدة - لا تحتاج تعديل) ---
   TableCell _buildHeaderCell(String text, TextStyle style) {
     return TableCell(
       verticalAlignment: TableCellVerticalAlignment.middle,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
-        child: Text(text, style: style, textAlign: TextAlign.center),
+        child: Text(
+          text,
+          style: style,
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }
@@ -275,12 +258,31 @@ class MenusView extends GetView<MenusController> {
       verticalAlignment: TableCellVerticalAlignment.middle,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
-        child: Text(text, style: style, textAlign: TextAlign.center),
+        child: Text(
+          text,
+          style: style,
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }
-  // (تم حذف دالة CheckboxCell لأننا لا نحتاجها هنا)
 
+  // (دالة الـ Checkbox مأخوذة من ديزاين الوحدات)
+  TableCell _buildCheckboxCell(bool value) {
+    return TableCell(
+      verticalAlignment: TableCellVerticalAlignment.middle,
+      child: Center(
+        child: Checkbox(
+          fillColor: WidgetStateProperty.all(AppColors.primary), //
+          value: value,
+          // (معطل حالياً)
+          onChanged: (val) {}, 
+        ),
+      ),
+    );
+  }
+
+  // دوال أزرار الصفحات
   Widget _buildPaginationControls() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -304,7 +306,7 @@ class MenusView extends GetView<MenusController> {
     bool isSelected = false,
   }) {
     return Material(
-      color: isSelected ? AppColors.primary : Colors.grey[200],
+      color: isSelected ? AppColors.primary : Colors.grey[200], //
       borderRadius: BorderRadius.circular(8),
       child: InkWell(
         onTap: onTap,

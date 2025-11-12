@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:one_click/src/shared/constants/app_colors.dart';
-import 'package:one_click/src/shared/widgets/content_header.dart';
-import 'package:one_click/src/modules/home/controllers/home_controller.dart';
-import '../controllers/units_controller.dart';
+import 'package:one_click/src/shared/constants/app_colors.dart'; //
+import 'package:one_click/src/shared/widgets/content_header.dart'; //
+import 'package:one_click/src/modules/home/controllers/home_controller.dart'; //
+import '../controllers/units_controller.dart'; //
 
 class UnitsView extends GetView<UnitsController> {
   const UnitsView({super.key});
@@ -14,12 +14,8 @@ class UnitsView extends GetView<UnitsController> {
 
     return SingleChildScrollView(
       controller: homeController.scrollController,
-      // (تعديل) جعل الخلفية شفافة ليظهر التدرج
-      // child: Container(
-      //   color: Colors.transparent,
       child: Column(
         children: [
-          // (تعديل) الهيدر الآن بخلفية شفافة
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
             child: ContentHeader(),
@@ -33,19 +29,16 @@ class UnitsView extends GetView<UnitsController> {
                 _buildPageTitleBar(),
                 const SizedBox(height: 20),
 
-                // 4. منطقة الفلترة (تظهر وتختفي)
+                // منطقة الفلترة (تظهر وتختفي)
                 _buildFilterArea(),
 
+                // --- الديزاين بالحواف الدائرية ---
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(16.0),
-                  // --- (تعديل هام) ---
-                  // إضافة clipBehavior لقص زوايا الجدول الداخلية
-                  clipBehavior: Clip.antiAlias,
-                  // --- (نهاية التعديل) ---
+                  clipBehavior: Clip.antiAlias, 
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(16.0),
+                    borderRadius: BorderRadius.circular(16.0), 
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black12,
@@ -58,29 +51,31 @@ class UnitsView extends GetView<UnitsController> {
                     children: [
                       SizedBox(
                         width: double.infinity,
-                        child: Obx(() => _buildDataTable()), // <-- تم تعديل هذه الدالة بالكامل
+                        // الجدول بالـ 5 أعمدة
+                        child: Obx(() => _buildDataTable()), 
                       ),
-                      const SizedBox(height: 16),
-                      _buildPaginationControls(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        child: _buildPaginationControls(), // أزرار الصفحات
+                      ),
                     ],
                   ),
                 ),
+                // --- نهاية الديزاين ---
                 const SizedBox(height: 20),
               ],
             ),
           ),
         ],
       ),
-      // ),
     );
   }
 
-  // (الكود هنا لم يتغير)
+  // دالة العنوان والفلتر (كما هي)
   Widget _buildPageTitleBar() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // --- (تعديل) العنوان أولاً (ليظهر يميناً) ---
         const Text(
           'الوحدات',
           textAlign: TextAlign.right,
@@ -90,11 +85,9 @@ class UnitsView extends GetView<UnitsController> {
             color: AppColors.primary,
           ),
         ),
-
-        // --- (تعديل) الزر ثانياً (ليظهر يساراً) ---
         ElevatedButton(
           onPressed: () {
-            controller.toggleFilterVisibility();
+            controller.toggleFilterVisibility(); //
           },
           style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(
@@ -110,11 +103,11 @@ class UnitsView extends GetView<UnitsController> {
     );
   }
 
-  // (الكود هنا لم يتغير)
+  // دالة الفلترة (كما هي)
   Widget _buildFilterArea() {
     return Obx(() {
       return Visibility(
-        visible: controller.isFilterVisible.value,
+        visible: controller.isFilterVisible.value, //
         child: Container(
           padding: const EdgeInsets.all(16),
           margin: const EdgeInsets.only(bottom: 20),
@@ -144,45 +137,7 @@ class UnitsView extends GetView<UnitsController> {
                   contentPadding: const EdgeInsets.symmetric(horizontal: 10),
                 ),
               ),
-              const SizedBox(height: 16),
-
-              // --- 2. المدينة ---
-              const Text(
-                'المدينة',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                textAlign: TextAlign.right,
-                decoration: InputDecoration(
-                  hintText: '...اختار',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // --- 3. البرنامج ---
-              const Text(
-                'البرنامج',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                textAlign: TextAlign.right,
-                decoration: InputDecoration(
-                  hintText: '...اختار',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-                ),
-              ),
               const SizedBox(height: 24),
-
-              // --- 4. زر البحث (الأخضر) ---
               Align(
                 alignment: Alignment.centerLeft,
                 child: ElevatedButton.icon(
@@ -209,48 +164,44 @@ class UnitsView extends GetView<UnitsController> {
     });
   }
 
-  // --- (
-  // --- ( 🌟 تم تعديل هذه الدالة بالكامل 🌟 ) ---
-  // ---
+  // دالة بناء الجدول (مع التعديل)
   Widget _buildDataTable() {
-    // --- (جديد) تعريف ستايل الخطوط ---
     const TextStyle headerStyle = TextStyle(
-      fontSize: 13.0, // <-- خط أصغر
+      fontSize: 13.0, 
       color: Colors.white,
-      fontWeight: FontWeight.bold,
+      fontWeight: FontWeight.bold, // (العناوين bold)
+      fontFamily: 'Cairo',
     );
 
+    
     const TextStyle bodyStyle = TextStyle(
-      fontSize: 12.0, // <-- خط أصغر
+      fontSize: 12.0, 
       color: Colors.black87,
+      fontFamily: 'Cairo',
+      fontWeight: FontWeight.bold, 
     );
+    
 
-    // --- (جديد) لون الحدود ---
     final Color borderColor = Colors.grey.shade300;
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Table(
-        // --- (جديد) تحديد عرض الأعمدة ---
-        // يمكنك تعديل الأرقام هنا لتناسب محتواك
         columnWidths: const {
           0: FixedColumnWidth(50.0),  // #
           1: FixedColumnWidth(120.0), // اسم الوحده
           2: FixedColumnWidth(150.0), // اسم الوحده الاساسية
           3: FixedColumnWidth(160.0), // الكميه من الوحده الاساسية
-          4: FixedColumnWidth(100.0), // وحده اساسيه ؟
+          4: FixedColumnWidth(140.0), // وحده اساسيه ؟
         },
-        // --- (جديد) هذا هو أهم جزء لإضافة الخطوط ---
         border: TableBorder.all(
           color: borderColor,
           width: 1.0,
-          borderRadius: BorderRadius.zero, // نعتمد على الـ ClipRRect الخارجي
+          borderRadius: BorderRadius.zero, 
         ),
-        // --- (نهاية التعديل) ---
         children: [
-          // --- 1. رأس الجدول (Header) ---
+          // رأس الجدول
           TableRow(
-            // --- (جديد) خلفية الهيدر ---
             decoration: const BoxDecoration(
               color: AppColors.primary,
             ),
@@ -263,22 +214,20 @@ class UnitsView extends GetView<UnitsController> {
             ],
           ),
           
-          // --- 2. صفوف البيانات (Body) ---
-          ...controller.units.map((unit) {
+          // صفوف البيانات
+          ...controller.units.map((unit) { //
             return TableRow(
-              // --- (جديد) خلفية الصفوف (يمكنك جعلها متغيرة) ---
               decoration: BoxDecoration(
-                color: controller.units.indexOf(unit).isEven
+                color: controller.units.indexOf(unit).isEven //
                     ? Colors.white
-                    : Colors.grey.shade50, // لعمل تلوين متبادل (اختياري)
+                    : Colors.grey.shade50, 
               ),
               children: [
-                _buildBodyCell(unit.id.toString(), bodyStyle),
-                _buildBodyCell(unit.name, bodyStyle),
-                _buildBodyCell(unit.baseUnitName, bodyStyle),
-                _buildBodyCell(unit.quantity.toString(), bodyStyle),
-                // --- (جديد) خلية خاصة للـ Checkbox ---
-                _buildCheckboxCell(unit.isBaseUnit),
+                _buildBodyCell(unit.id.toString(), bodyStyle), //
+                _buildBodyCell(unit.name, bodyStyle), //
+                _buildBodyCell(unit.baseUnitName, bodyStyle), //
+                _buildBodyCell(unit.quantity.toString(), bodyStyle), //
+                _buildCheckboxCell(unit.isBaseUnit), //
               ],
             );
           }).toList(),
@@ -287,8 +236,7 @@ class UnitsView extends GetView<UnitsController> {
     );
   }
 
-  // --- ( 🌟 دالة مساعدة جديدة 🌟 ) ---
-  // لبناء خلايا الهيدر
+  // الدوال المساعدة (كما هي)
   TableCell _buildHeaderCell(String text, TextStyle style) {
     return TableCell(
       verticalAlignment: TableCellVerticalAlignment.middle,
@@ -303,8 +251,6 @@ class UnitsView extends GetView<UnitsController> {
     );
   }
 
-  // --- ( 🌟 دالة مساعدة جديدة 🌟 ) ---
-  // لبناء خلايا المحتوى
   TableCell _buildBodyCell(String text, TextStyle style) {
     return TableCell(
       verticalAlignment: TableCellVerticalAlignment.middle,
@@ -319,8 +265,6 @@ class UnitsView extends GetView<UnitsController> {
     );
   }
 
-  // --- ( 🌟 دالة مساعدة جديدة 🌟 ) ---
-  // لبناء خلية الـ Checkbox
   TableCell _buildCheckboxCell(bool value) {
     return TableCell(
       verticalAlignment: TableCellVerticalAlignment.middle,
@@ -328,14 +272,13 @@ class UnitsView extends GetView<UnitsController> {
         child: Checkbox(
           fillColor: WidgetStateProperty.all(AppColors.primary),
           value: value,
-          onChanged: (val) {}, // لا تفعل شيئاً عند الضغط
+          onChanged: (val) {}, 
         ),
       ),
     );
   }
 
-
-  // (الكود هنا لم يتغير)
+  // دوال أزرار الصفحات (كما هي)
   Widget _buildPaginationControls() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -353,7 +296,6 @@ class UnitsView extends GetView<UnitsController> {
     );
   }
 
-  // (الكود هنا لم يتغير)
   Widget _buildPageButton({
     required Widget child,
     required VoidCallback onTap,

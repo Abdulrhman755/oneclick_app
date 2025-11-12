@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:one_click/src/modules/Additions/bindings/additions_binding.dart';
+import 'package:one_click/src/modules/Additions/views/additions_view.dart';
+import 'package:one_click/src/modules/Items/bindings/items_binding.dart';
+import 'package:one_click/src/modules/Items/views/items_view.dart';
+import 'package:one_click/src/modules/sections/bindings/sections_binding.dart';
+import 'package:one_click/src/modules/sections/views/sections_view.dart';
 import 'package:one_click/src/modules/home/controllers/home_controller.dart';
 import 'package:one_click/src/routes/app_pages.dart'; 
 import 'package:one_click/src/shared/constants/app_colors.dart';
@@ -49,11 +55,26 @@ class HomeView extends GetView<HomeController> {
                   page: () => const UnitsView(),
                   binding: UnitsBinding(),
                 );
-              // --- 2. (جديد) إضافة المسار ---
+              
               case Paths.menus:
                 return GetPageRoute(
                   page: () => const MenusView(),
                   binding: MenusBinding(),
+                );
+              case Paths.additions:
+                return GetPageRoute(
+                  page: () =>   AdditionsView(),
+                  binding: AdditionsBinding(),
+                );
+              case Paths.sections:
+                return GetPageRoute(
+                  page: () =>   SectionsView(),
+                  binding: SectionsBinding(),
+                );
+                case Paths.items:
+                return GetPageRoute(
+                  page: () =>   ItemsView(),
+                  binding: ItemsBinding(),
                 );
               
               default:

@@ -16,9 +16,9 @@ class MenuData {
         NavSubItemModel(title: 'الوحدات', route: Routes.units),
         // --- 2. (تعديل) ربط المنيوهات بالمسار الجديد ---
         NavSubItemModel(title: 'المنيوهات', route: Routes.menus), 
-        NavSubItemModel(title: 'الاضافات', route: '/additions'),
-        NavSubItemModel(title: 'الأقسام', route: '/sections'),
-        NavSubItemModel(title: 'الاصناف', route: '/items'),
+        NavSubItemModel(title: 'الاضافات', route: Routes.additions),
+        NavSubItemModel(title: 'الأقسام', route: Routes.sections),
+        NavSubItemModel(title: 'الاصناف', route: Routes.items),
         NavSubItemModel(title: 'المجموعات', route: '/groups'),
         NavSubItemModel(title: 'أقسام الخامات', route: '/material-sections'),
         NavSubItemModel(title: 'الخامات', route: '/materials'),

@@ -19,30 +19,38 @@ class NavExpansionMenu extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Obx(() {
       final bool isExpanded = controller.expandedMenuKeys.contains(text);
-      final bool hasActiveChild = children.any((child) => 
-          controller.activeSubMenuRoute.value == child.route);
+      final bool hasActiveChild = children.any(
+        (child) => controller.activeSubMenuRoute.value == child.route,
+      );
 
       // --- (الإصلاح) إرجاع منطق الألوان القديم ---
-      final bool isHeaderActive = isExpanded || hasActiveChild; 
-      
+      final bool isHeaderActive = isExpanded || hasActiveChild;
+
       final Color headerBackgroundColor =
-          isHeaderActive ? AppColors.primary : Colors.white; // خلفية زرقاء عند الفتح
-      final Color textColor = 
-          isHeaderActive ? Colors.white : AppColors.primary; // نص أبيض عند الفتح
-      final Color iconColor = 
-          isHeaderActive ? Colors.white : AppColors.primary; // أيقونة بيضاء عند الفتح
+          isHeaderActive
+              ? AppColors.primary
+              : Colors.white; // خلفية زرقاء عند الفتح
+      final Color textColor =
+          isHeaderActive
+              ? Colors.white
+              : AppColors.primary; // نص أبيض عند الفتح
+      final Color iconColor =
+          isHeaderActive
+              ? Colors.white
+              : AppColors.primary; // أيقونة بيضاء عند الفتح
 
       return Container(
         margin: const EdgeInsets.only(top: 8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          border: isHeaderActive ? null : Border.all(color: Colors.grey.shade300),
+          border:
+              isHeaderActive ? null : Border.all(color: Colors.grey.shade300),
         ),
         clipBehavior: Clip.antiAlias,
         child: Column(
           children: [
             Container(
-              color: headerBackgroundColor, 
+              color: headerBackgroundColor,
               child: ListTile(
                 onTap: () {
                   controller.toggleMenu(text);
@@ -50,10 +58,7 @@ class NavExpansionMenu extends GetView<HomeController> {
                 hoverColor: isHeaderActive ? null : Colors.grey[100],
                 splashColor: isHeaderActive ? null : Colors.grey[200],
                 horizontalTitleGap: 8,
-                leading: Icon(
-                  icon,
-                  color: iconColor,
-                ),
+                leading: Icon(icon, color: iconColor),
                 title: Text(
                   text,
                   textAlign: TextAlign.right,
@@ -73,11 +78,11 @@ class NavExpansionMenu extends GetView<HomeController> {
                 ),
               ),
             ),
-            
+
             Visibility(
               visible: isExpanded,
               child: Container(
-                color: Colors.white, 
+                color: Colors.white,
                 padding: const EdgeInsets.only(right: 30.0),
                 child: Column(children: children),
               ),
@@ -125,7 +130,7 @@ class NavSubMenuItem extends GetView<HomeController> {
             textAlign: TextAlign.right,
             style: TextStyle(
               color: itemColor,
-              fontWeight: FontWeight.bold, 
+              fontWeight: FontWeight.bold,
               fontSize: 14,
             ),
           ),
