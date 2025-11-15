@@ -1,23 +1,17 @@
 class ItemModel {
   final String id;
-  final String name;              // اسم الصنف
-  final String section;           // القسم
-  final String unit;              // الوحدة
-  final String sellPrice;         // سعر البيع
-  final String cost;              // تكلفة الصنف
-  final bool taxIncluded;         // شامل الضريبة؟
-  final bool showInHome;          // يظهر في الرئيسية؟
-  final String branch;            // الفرع
+  final String name;        // اسم المنتج
+  final String sellPrice;   // سعر البيع
+  final String sellUnit;    // وحده البيع
+  final String sectionName; // اسم القسم
+  final String menu;        // المنيو
 
   ItemModel({
     required this.id,
     required this.name,
-    required this.section,
-    required this.unit,
     required this.sellPrice,
-    required this.cost,
-    required this.taxIncluded,
-    required this.showInHome,
-    required this.branch,
+    required this.sellUnit,
+    required this.sectionName,
+    required this.menu,
   });
 }

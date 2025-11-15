@@ -1,25 +1,51 @@
 import 'package:get/get.dart';
-// (تأكد أن المسار صحيح)
-import 'package:one_click/src/modules/units/models/unit_model.dart';
+import '../models/unit_model.dart';
 
 class UnitsController extends GetxController {
-
-  // --- 1. (جديد) متغير للتحكم في الفلتر ---
   var isFilterVisible = false.obs;
+  void toggleFilterVisibility() => isFilterVisible.toggle();
 
-  // --- 2. (جديد) دالة لفتح وإغلاق الفلتر ---
-  void toggleFilterVisibility() {
-    isFilterVisible.toggle();
+  // --- (جديد) منطق ترقيم الصفحات ---
+  final int itemsPerPage = 2;
+  var currentPage = 1.obs;
+
+  final List<UnitModel> _masterUnitsList = [
+    UnitModel(
+      id: '1',
+      name: 'قطعة',
+      baseUnitName: 'قطعة',
+      quantity: 1.0,
+      isBaseUnit: true,
+    ),
+    UnitModel(
+      id: '2',
+      name: 'علبة',
+      baseUnitName: 'قطعة',
+      quantity: 10.0,
+      isBaseUnit: false,
+    ),
+  ];
+
+  var pagedItems = <UnitModel>[].obs;
+  late int totalPages;
+
+  @override
+  void onInit() {
+    super.onInit();
+    totalPages = (_masterUnitsList.length / itemsPerPage).ceil();
+    changePage(1);
   }
-  // ----------------------------------------
 
-  // (البيانات التي سنعرضها في الجدول)
-  final units = <UnitModel>[
-    UnitModel(id: '1', name: 'طن', baseUnitName: 'جرام', quantity: 1000000.00, isBaseUnit: false),
-    UnitModel(id: '2', name: 'قطعة', baseUnitName: '---', quantity: 1.00, isBaseUnit: true),
-    UnitModel(id: '3', name: 'ساعة', baseUnitName: '---', quantity: 1.00, isBaseUnit: true),
-    UnitModel(id: '4', name: 'جرام', baseUnitName: 'جرام', quantity: 1.00, isBaseUnit: true),
-    UnitModel(id: '5', name: 'كيلو جرام', baseUnitName: 'جرام', quantity: 1000.00, isBaseUnit: false),
-    UnitModel(id: '6', name: 'عدد', baseUnitName: '---', quantity: 1.00, isBaseUnit: true),
-  ].obs;
+  void changePage(int pageIndex) {
+    currentPage.value = pageIndex;
+    int startIndex = (pageIndex - 1) * itemsPerPage;
+    int endIndex = (startIndex + itemsPerPage);
+    
+    if (endIndex > _masterUnitsList.length) {
+      endIndex = _masterUnitsList.length;
+    }
+    pagedItems.assignAll(
+      _masterUnitsList.sublist(startIndex, endIndex),
+    );
+  }
 }

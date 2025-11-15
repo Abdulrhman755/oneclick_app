@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // (تأكد أن هذا المسار صحيح عندك)
 import 'package:one_click/src/routes/app_pages.dart';
+import 'package:one_click/src/shared/constants/app_colors.dart'; // (لقد افترضت أن هذا هو المسار)
 
 void main() {
   runApp(
@@ -12,25 +13,24 @@ void main() {
       debugShowCheckedModeBanner: false,
 
       theme: ThemeData(
-        fontFamily: 'Cairo',
+        fontFamily: 'Calibri',
 
-        primarySwatch: Colors.blue,
+        primaryColor: AppColors.primary,
+        scaffoldBackgroundColor: Colors.white,
         visualDensity: VisualDensity.adaptivePlatformDensity,
 
-        // 3. (اختياري) لضمان أن العناوين تأخذ الفونت أيضاً
         textTheme: const TextTheme(
-          headlineSmall: TextStyle(fontFamily: 'Cairo'),
-          headlineMedium: TextStyle(fontFamily: 'Cairo'),
-          headlineLarge: TextStyle(fontFamily: 'Cairo'),
-          bodySmall: TextStyle(fontFamily: 'Cairo'),
-          bodyMedium: TextStyle(fontFamily: 'Cairo'),
-          bodyLarge: TextStyle(fontFamily: 'Cairo'),
-          titleSmall: TextStyle(fontFamily: 'Cairo'),
-          titleMedium: TextStyle(fontFamily: 'Cairo'),
-          titleLarge: TextStyle(fontFamily: 'Cairo'),
+          headlineSmall: TextStyle(fontFamily: 'Calibri'),
+          headlineMedium: TextStyle(fontFamily: 'Calibri'),
+          headlineLarge: TextStyle(fontFamily: 'Calibri'),
+          bodySmall: TextStyle(fontFamily: 'Calibri'),
+          bodyMedium: TextStyle(fontFamily: 'Calibri'),
+          bodyLarge: TextStyle(fontFamily: 'Calibri'),
+          titleSmall: TextStyle(fontFamily: 'Calibri'),
+          titleMedium: TextStyle(fontFamily: 'Calibri'),
+          titleLarge: TextStyle(fontFamily: 'Calibri'),
         ),
       ),
-
       locale: const Locale('ar', 'EG'),
       fallbackLocale: const Locale('en', 'US'),
     ),

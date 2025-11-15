@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:one_click/src/shared/constants/app_colors.dart'; //
-import 'package:one_click/src/shared/widgets/content_header.dart'; //
-import 'package:one_click/src/modules/home/controllers/home_controller.dart'; //
-import '../controllers/units_controller.dart'; //
+import 'package:one_click/src/shared/constants/app_colors.dart';
+import 'package:one_click/src/shared/widgets/content_header.dart';
+import 'package:one_click/src/modules/home/controllers/home_controller.dart'; 
+import '../controllers/units_controller.dart'; 
+import 'package:one_click/src/shared/widgets/table_helpers.dart';
+import 'package:one_click/src/shared/widgets/filter_container.dart';
 
 class UnitsView extends GetView<UnitsController> {
   const UnitsView({super.key});
@@ -21,18 +23,13 @@ class UnitsView extends GetView<UnitsController> {
             child: ContentHeader(),
           ),
           const SizedBox(height: 20),
-
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
               children: [
                 _buildPageTitleBar(),
                 const SizedBox(height: 20),
-
-                // منطقة الفلترة (تظهر وتختفي)
-                _buildFilterArea(),
-
-                // --- الديزاين بالحواف الدائرية ---
+                _buildFilterArea(), 
                 Container(
                   width: double.infinity,
                   clipBehavior: Clip.antiAlias, 
@@ -51,17 +48,15 @@ class UnitsView extends GetView<UnitsController> {
                     children: [
                       SizedBox(
                         width: double.infinity,
-                        // الجدول بالـ 5 أعمدة
-                        child: Obx(() => _buildDataTable()), 
+                        child: Obx(() => _buildCustomTable()), 
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        child: _buildPaginationControls(), // أزرار الصفحات
+                        child: Obx(() => _buildPaginationControls()),
                       ),
                     ],
                   ),
                 ),
-                // --- نهاية الديزاين ---
                 const SizedBox(height: 20),
               ],
             ),
@@ -71,13 +66,12 @@ class UnitsView extends GetView<UnitsController> {
     );
   }
 
-  // دالة العنوان والفلتر (كما هي)
   Widget _buildPageTitleBar() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         const Text(
-          'الوحدات',
+          'الوحدات', 
           textAlign: TextAlign.right,
           style: TextStyle(
             fontSize: 24,
@@ -87,7 +81,7 @@ class UnitsView extends GetView<UnitsController> {
         ),
         ElevatedButton(
           onPressed: () {
-            controller.toggleFilterVisibility(); //
+            controller.toggleFilterVisibility();
           },
           style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(
@@ -103,131 +97,88 @@ class UnitsView extends GetView<UnitsController> {
     );
   }
 
-  // دالة الفلترة (كما هي)
+  // --- 🌟 (تم التعديل) استخدام Align 🌟 ---
   Widget _buildFilterArea() {
-    return Obx(() {
-      return Visibility(
-        visible: controller.isFilterVisible.value, //
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          margin: const EdgeInsets.only(bottom: 20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              // ... (محتوى الفلتر كما هو)
-              const Text(
-                'المحافظة',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                textAlign: TextAlign.right,
-                decoration: InputDecoration(
-                  hintText: '...اختار',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-                ),
-              ),
-              const SizedBox(height: 24),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    /* TODO: Apply filter */
-                  },
-                  icon: const Icon(Icons.search, color: Colors.white),
-                  label: const Text('بحث'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green[600],
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 30,
-                      vertical: 12,
-                    ),
-                    textStyle: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ],
+    return FilterContainer(
+      isVisible: controller.isFilterVisible,
+      onSearchPressed: () { /* TODO: Apply filter */ },
+      filterFields: [
+        const Align(
+          alignment: Alignment.centerRight,
+          child: Text(
+            'اسم الوحده',
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
-      );
-    });
+        const SizedBox(height: 8),
+        TextFormField(
+          textAlign: TextAlign.right,
+          decoration: InputDecoration(
+            hintText: '...ابحث بالاسم',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 10,
+              vertical: 8,
+            ),
+            isDense: true,
+          ),
+        ),
+      ],
+    );
   }
 
-  // دالة بناء الجدول (مع التعديل)
-  Widget _buildDataTable() {
+  Widget _buildCustomTable() {
     const TextStyle headerStyle = TextStyle(
       fontSize: 13.0, 
       color: Colors.white,
-      fontWeight: FontWeight.bold, // (العناوين bold)
-      fontFamily: 'Cairo',
+      fontWeight: FontWeight.bold,
+      fontFamily: 'Calibri',
     );
-
-    
     const TextStyle bodyStyle = TextStyle(
       fontSize: 12.0, 
       color: Colors.black87,
-      fontFamily: 'Cairo',
-      fontWeight: FontWeight.bold, 
+      fontFamily: 'Calibri',
+      fontWeight: FontWeight.bold,
     );
-    
-
     final Color borderColor = Colors.grey.shade300;
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Table(
         columnWidths: const {
-          0: FixedColumnWidth(50.0),  // #
-          1: FixedColumnWidth(120.0), // اسم الوحده
-          2: FixedColumnWidth(150.0), // اسم الوحده الاساسية
-          3: FixedColumnWidth(160.0), // الكميه من الوحده الاساسية
-          4: FixedColumnWidth(140.0), // وحده اساسيه ؟
+          0: FixedColumnWidth(50.0),
+          1: FixedColumnWidth(120.0),
+          2: FixedColumnWidth(150.0),
+          3: FixedColumnWidth(160.0),
+          4: FixedColumnWidth(100.0),
         },
-        border: TableBorder.all(
-          color: borderColor,
-          width: 1.0,
-          borderRadius: BorderRadius.zero, 
-        ),
+        border: TableBorder.all(color: borderColor, width: 1.0),
         children: [
-          // رأس الجدول
           TableRow(
-            decoration: const BoxDecoration(
-              color: AppColors.primary,
-            ),
+            decoration: const BoxDecoration(color: AppColors.primary),
             children: [
-              _buildHeaderCell('#', headerStyle),
-              _buildHeaderCell('اسم الوحده', headerStyle),
-              _buildHeaderCell('اسم الوحده الاساسية', headerStyle),
-              _buildHeaderCell('الكميه من الوحده الاساسية', headerStyle),
-              _buildHeaderCell('وحده اساسيه ؟', headerStyle),
+              buildHeaderCell('#', headerStyle),
+              buildHeaderCell('اسم الوحده', headerStyle),
+              buildHeaderCell('اسم الوحده الاساسية', headerStyle),
+              buildHeaderCell('الكميه من الوحده الاساسية', headerStyle),
+              buildHeaderCell('وحده اساسيه ؟', headerStyle),
             ],
           ),
-          
-          // صفوف البيانات
-          ...controller.units.map((unit) { //
+          ...controller.pagedItems.map((unit) {
             return TableRow(
               decoration: BoxDecoration(
-                color: controller.units.indexOf(unit).isEven //
+                color: controller.pagedItems.indexOf(unit).isEven
                     ? Colors.white
                     : Colors.grey.shade50, 
               ),
               children: [
-                _buildBodyCell(unit.id.toString(), bodyStyle), //
-                _buildBodyCell(unit.name, bodyStyle), //
-                _buildBodyCell(unit.baseUnitName, bodyStyle), //
-                _buildBodyCell(unit.quantity.toString(), bodyStyle), //
-                _buildCheckboxCell(unit.isBaseUnit), //
+                buildBodyCell(unit.id.toString(), bodyStyle),
+                buildBodyCell(unit.name, bodyStyle),
+                buildBodyCell(unit.baseUnitName, bodyStyle),
+                buildBodyCell(unit.quantity.toString(), bodyStyle),
+                buildCheckboxCell(unit.isBaseUnit),
               ],
             );
           }).toList(),
@@ -236,88 +187,32 @@ class UnitsView extends GetView<UnitsController> {
     );
   }
 
-  // الدوال المساعدة (كما هي)
-  TableCell _buildHeaderCell(String text, TextStyle style) {
-    return TableCell(
-      verticalAlignment: TableCellVerticalAlignment.middle,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
-        child: Text(
-          text,
-          style: style,
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
-  }
-
-  TableCell _buildBodyCell(String text, TextStyle style) {
-    return TableCell(
-      verticalAlignment: TableCellVerticalAlignment.middle,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
-        child: Text(
-          text,
-          style: style,
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
-  }
-
-  TableCell _buildCheckboxCell(bool value) {
-    return TableCell(
-      verticalAlignment: TableCellVerticalAlignment.middle,
-      child: Center(
-        child: Checkbox(
-          fillColor: WidgetStateProperty.all(AppColors.primary),
-          value: value,
-          onChanged: (val) {}, 
-        ),
-      ),
-    );
-  }
-
-  // دوال أزرار الصفحات (كما هي)
   Widget _buildPaginationControls() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildPageButton(onTap: () {}, child: const Text('الأخير')),
-        const SizedBox(width: 8),
-        _buildPageButton(
-          isSelected: true,
-          onTap: () {},
-          child: const Text('1'),
+        buildPageButton(
+          onTap: () => controller.changePage(1),
+          child: const Text('الأول'),
         ),
         const SizedBox(width: 8),
-        _buildPageButton(onTap: () {}, child: const Text('الأول')),
-      ],
-    );
-  }
-
-  Widget _buildPageButton({
-    required Widget child,
-    required VoidCallback onTap,
-    bool isSelected = false,
-  }) {
-    return Material(
-      color: isSelected ? AppColors.primary : Colors.grey[200],
-      borderRadius: BorderRadius.circular(8),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: DefaultTextStyle(
-            style: TextStyle(
-              color: isSelected ? Colors.white : Colors.black,
-              fontWeight: FontWeight.bold,
+        ...List.generate(controller.totalPages, (index) {
+          final pageNum = index + 1;
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+            child: buildPageButton(
+              isSelected: controller.currentPage.value == pageNum,
+              onTap: () => controller.changePage(pageNum),
+              child: Text('$pageNum'),
             ),
-            child: child,
-          ),
+          );
+        }),
+        const SizedBox(width: 8),
+        buildPageButton(
+          onTap: () => controller.changePage(controller.totalPages),
+          child: const Text('الأخير'),
         ),
-      ),
+      ],
     );
   }
 }

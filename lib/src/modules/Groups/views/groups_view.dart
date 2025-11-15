@@ -5,6 +5,11 @@ import 'package:one_click/src/shared/widgets/content_header.dart';
 import 'package:one_click/src/modules/home/controllers/home_controller.dart';
 import '../controllers/groups_controller.dart';
 
+// --- (جديد) استيراد الملفات الجديدة ---
+import 'package:one_click/src/shared/widgets/table_helpers.dart';
+import 'package:one_click/src/shared/widgets/filter_container.dart';
+// (تم حذف filter_field_row)
+
 class GroupsView extends GetView<GroupsController> {
   const GroupsView({super.key});
 
@@ -18,7 +23,7 @@ class GroupsView extends GetView<GroupsController> {
         children: [
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-            child: ContentHeader(), //
+            child: ContentHeader(),
           ),
           const SizedBox(height: 20),
 
@@ -29,7 +34,7 @@ class GroupsView extends GetView<GroupsController> {
                 _buildPageTitleBar(),
                 const SizedBox(height: 20),
 
-                _buildFilterArea(),
+                _buildFilterArea(), // (الدالة المُصححة)
 
                 Container(
                   width: double.infinity,
@@ -53,7 +58,7 @@ class GroupsView extends GetView<GroupsController> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        child: _buildPaginationControls(),
+                        child: Obx(() => _buildPaginationControls()),
                       ),
                     ],
                   ),
@@ -67,18 +72,18 @@ class GroupsView extends GetView<GroupsController> {
     );
   }
 
-  // دالة العنوان والفلتر
+  // دالة العنوان (كما هي)
   Widget _buildPageTitleBar() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         const Text(
-          'سجل مجموعات الأقسام',
+          'المجموعات',
           textAlign: TextAlign.right,
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: AppColors.primary, //
+            color: AppColors.primary,
           ),
         ),
         ElevatedButton(
@@ -90,7 +95,7 @@ class GroupsView extends GetView<GroupsController> {
               borderRadius: BorderRadius.circular(8),
             ),
             padding: const EdgeInsets.all(12),
-            backgroundColor: AppColors.primary, //
+            backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
           ),
           child: const Icon(Icons.filter_list, size: 20),
@@ -99,132 +104,93 @@ class GroupsView extends GetView<GroupsController> {
     );
   }
 
-  // دالة الفلترة
+  // --- 🌟 (تم التصحيح) دالة الفلتر (فوق بعض + محاذاة يمين) 🌟 ---
   Widget _buildFilterArea() {
-    return Obx(() {
-      return Visibility(
-        visible: controller.isFilterVisible.value,
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          margin: const EdgeInsets.only(bottom: 20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              const Text(
-                'اسم المجموعه', // (تم التصحيح)
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                textAlign: TextAlign.right,
-                decoration: InputDecoration(
-                  hintText: '...ابحث بالاسم',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-                ),
-              ),
-              const SizedBox(height: 24),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    /* TODO: Apply filter */
-                  },
-                  icon: const Icon(Icons.search, color: Colors.white),
-                  label: const Text('بحث'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green[600],
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 30,
-                      vertical: 12,
-                    ),
-                    textStyle: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ],
+    return FilterContainer(
+      isVisible: controller.isFilterVisible,
+      onSearchPressed: () {
+        /* TODO: Apply filter */
+      },
+
+      // (FilterContainer سيقوم بعمل محاذاة لليمين لهذه العناصر)
+      filterFields: [
+        Align(
+          alignment: Alignment.centerRight,
+          child: const Text(
+            'اسم المجموعه',
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
-      );
-    });
+        const SizedBox(height: 8),
+        TextFormField(
+          textAlign: TextAlign.right,
+          decoration: InputDecoration(
+            hintText: '...ابحث بالاسم',
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 10,
+              vertical: 8, // (تصغير الحقل)
+            ),
+            isDense: true,
+          ),
+        ),
+      ],
+    );
   }
 
-  // --- 🌟 دالة بناء الجدول (بالعناوين الصحيحة) 🌟 ---
+  // (باقي الدوال كما هي)
   Widget _buildCustomTable() {
-    // (العناوين Bold)
     const TextStyle headerStyle = TextStyle(
       fontSize: 14.0,
       color: Colors.white,
       fontWeight: FontWeight.bold,
-      fontFamily: 'Cairo',
+      fontFamily: 'Calibri',
     );
-
-    // (السطور Bold)
     const TextStyle bodyStyle = TextStyle(
       fontSize: 14.0,
       color: Colors.black87,
-      fontFamily: 'Cairo',
+      fontFamily: 'Calibri',
       fontWeight: FontWeight.bold,
     );
-
     final Color borderColor = Colors.grey.shade300;
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Table(
-        // (5 أعمدة)
         columnWidths: const {
-          0: FixedColumnWidth(50.0), // #
-          1: FixedColumnWidth(100.0), // اسم المجموعه
-          2: FixedColumnWidth(100.0), // اسم الطابعه
-          3: FixedColumnWidth(140.0), // رقم شاشة المطبخ
-          4: FixedColumnWidth(100.0), // عدد الأقسام
+          0: FixedColumnWidth(50.0),
+          1: FixedColumnWidth(100.0),
+          2: FixedColumnWidth(100.0),
+          3: FixedColumnWidth(140.0),
+          4: FixedColumnWidth(100.0),
         },
-        border: TableBorder.all(
-          color: borderColor,
-          width: 1.0,
-          borderRadius: BorderRadius.zero,
-        ),
+        border: TableBorder.all(color: borderColor, width: 1.0),
         children: [
-          // --- 🌟 رأس الجدول (تم تصحيح العناوين بالحرف) 🌟 ---
           TableRow(
-            decoration: const BoxDecoration(
-              color: AppColors.primary, //
-            ),
+            decoration: const BoxDecoration(color: AppColors.primary),
             children: [
-              _buildHeaderCell('#', headerStyle),
-              _buildHeaderCell('اسم المجموعه', headerStyle), // (تم التصحيح)
-              _buildHeaderCell('اسم الطابعه', headerStyle), // (تم التصحيح)
-              _buildHeaderCell('رقم شاشة المطبخ', headerStyle), // (تم التصحيح)
-              _buildHeaderCell('عدد الأقسام', headerStyle), // (تم التصحيح)
+              buildHeaderCell('#', headerStyle),
+              buildHeaderCell('اسم المجموعه', headerStyle),
+              buildHeaderCell('اسم الطابعه', headerStyle),
+              buildHeaderCell('رقم شاشة المطبخ', headerStyle),
+              buildHeaderCell('عدد الأقسام', headerStyle),
             ],
           ),
 
-          // صفوف البيانات
-          ...controller.groups.map((group) {
+          ...controller.pagedItems.map((group) {
             return TableRow(
               decoration: BoxDecoration(
                 color:
-                    controller.groups.indexOf(group).isEven
+                    controller.pagedItems.indexOf(group).isEven
                         ? Colors.white
                         : Colors.grey.shade50,
               ),
               children: [
-                _buildBodyCell(group.id, bodyStyle),
-                _buildBodyCell(group.name, bodyStyle),
-                _buildBodyCell(group.printerName, bodyStyle),
-                _buildBodyCell(group.kitchenScreenNumber, bodyStyle),
-                _buildBodyCell(group.sectionCount, bodyStyle),
+                buildBodyCell(group.id, bodyStyle),
+                buildBodyCell(group.name, bodyStyle),
+                buildBodyCell(group.printerName, bodyStyle),
+                buildBodyCell(group.kitchenScreenNumber, bodyStyle),
+                buildBodyCell(group.sectionCount, bodyStyle),
               ],
             );
           }).toList(),
@@ -233,67 +199,34 @@ class GroupsView extends GetView<GroupsController> {
     );
   }
 
-  // --- (دوال مساعدة - لا تحتاج تعديل) ---
-  TableCell _buildHeaderCell(String text, TextStyle style) {
-    return TableCell(
-      verticalAlignment: TableCellVerticalAlignment.middle,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
-        child: Text(text, style: style, textAlign: TextAlign.center),
-      ),
-    );
-  }
-
-  TableCell _buildBodyCell(String text, TextStyle style) {
-    return TableCell(
-      verticalAlignment: TableCellVerticalAlignment.middle,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
-        child: Text(text, style: style, textAlign: TextAlign.center),
-      ),
-    );
-  }
-
-  // دوال أزرار الصفحات (ثابتة)
   Widget _buildPaginationControls() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildPageButton(onTap: () {}, child: const Text('الأخير')),
-        const SizedBox(width: 8),
-        _buildPageButton(
-          isSelected: true,
-          onTap: () {},
-          child: const Text('1'),
+        buildPageButton(
+          onTap: () => controller.changePage(1),
+          child: const Text('الأول'),
         ),
         const SizedBox(width: 8),
-        _buildPageButton(onTap: () {}, child: const Text('الأول')),
-      ],
-    );
-  }
 
-  Widget _buildPageButton({
-    required Widget child,
-    required VoidCallback onTap,
-    bool isSelected = false,
-  }) {
-    return Material(
-      color: isSelected ? AppColors.primary : Colors.grey[200], //
-      borderRadius: BorderRadius.circular(8),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: DefaultTextStyle(
-            style: TextStyle(
-              color: isSelected ? Colors.white : Colors.black,
-              fontWeight: FontWeight.bold,
+        ...List.generate(controller.totalPages, (index) {
+          final pageNum = index + 1;
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+            child: buildPageButton(
+              isSelected: controller.currentPage.value == pageNum,
+              onTap: () => controller.changePage(pageNum),
+              child: Text('$pageNum'),
             ),
-            child: child,
-          ),
+          );
+        }),
+
+        const SizedBox(width: 8),
+        buildPageButton(
+          onTap: () => controller.changePage(controller.totalPages),
+          child: const Text('الأخير'),
         ),
-      ),
+      ],
     );
   }
 }
