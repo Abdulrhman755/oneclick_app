@@ -21,6 +21,9 @@ abstract class Routes {
   static const tables = Paths.home + Paths.tables;
   static const sizes = Paths.home + Paths.sizes;
   static const deliveryZones = Paths.home + Paths.deliveryZones;
+  static const mainSafes = Paths.home + Paths.mainSafes;
+  static const dailyReports = Paths.home + Paths.dailyReports;
+  static const activityLog = Paths.home + Paths.activityLog;
   
   // (سنضيف باقي المسارات هنا)
 }
@@ -47,4 +50,7 @@ abstract class Paths {
   static const tables = '/tables';
   static const sizes = '/sizes';
   static const deliveryZones = '/delivery-zones';
+  static const mainSafes = '/main-safes';
+  static const dailyReports = '/daily-reports';
+  static const activityLog = '/activity-log';
 }

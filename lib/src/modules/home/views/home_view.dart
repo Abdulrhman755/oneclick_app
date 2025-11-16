@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:one_click/src/modules/ActivityLog/bindings/activity_log_binding.dart';
+import 'package:one_click/src/modules/ActivityLog/views/activity_log_view.dart';
 import 'package:one_click/src/modules/Additions/bindings/additions_binding.dart';
 import 'package:one_click/src/modules/Additions/views/additions_view.dart';
 import 'package:one_click/src/modules/Captains/bindings/captains_binding.dart';
 import 'package:one_click/src/modules/Captains/views/captains_view.dart';
+import 'package:one_click/src/modules/DailyReports/bindings/daily_reports_binding.dart';
+import 'package:one_click/src/modules/DailyReports/views/daily_reports_view.dart';
 import 'package:one_click/src/modules/DeliveryZones/bindings/delivery_zones_binding.dart';
 import 'package:one_click/src/modules/DeliveryZones/views/delivery_zones_view.dart';
 import 'package:one_click/src/modules/Drivers/bindings/drivers_binding.dart';
@@ -14,6 +18,8 @@ import 'package:one_click/src/modules/Halls/bindings/halls_binding.dart';
 import 'package:one_click/src/modules/Halls/views/halls_view.dart';
 import 'package:one_click/src/modules/Items/bindings/items_binding.dart';
 import 'package:one_click/src/modules/Items/views/items_view.dart';
+import 'package:one_click/src/modules/MainSafes/bindings/main_safes_binding.dart';
+import 'package:one_click/src/modules/MainSafes/views/main_safes_view.dart';
 import 'package:one_click/src/modules/MaterialSections/bindings/material_sections_binding.dart';
 import 'package:one_click/src/modules/MaterialSections/views/material_sections_view.dart';
 import 'package:one_click/src/modules/Materials/bindings/materials_binding.dart';
@@ -111,45 +117,60 @@ class HomeView extends GetView<HomeController> {
                   page: () => MaterialsView(),
                   binding: MaterialsBinding(),
                 );
-                case Paths.users:
+              case Paths.users:
                 return GetPageRoute(
                   page: () => UsersView(),
                   binding: UsersBinding(),
                 );
-                case Paths.permissions:
+              case Paths.permissions:
                 return GetPageRoute(
-                  page: () =>  PermissionsView(),
-                  binding:  PermissionsBinding(),
+                  page: () => PermissionsView(),
+                  binding: PermissionsBinding(),
                 );
-                case Paths.drivers:
+              case Paths.drivers:
                 return GetPageRoute(
-                  page: () =>  DriversView(),
-                  binding:  DriversBinding(),
+                  page: () => DriversView(),
+                  binding: DriversBinding(),
                 );
-                case Paths.captains:
+              case Paths.captains:
                 return GetPageRoute(
-                  page: () =>  CaptainsView(),
-                  binding:  CaptainsBinding(),
+                  page: () => CaptainsView(),
+                  binding: CaptainsBinding(),
                 );
-                case Paths.halls:
+              case Paths.halls:
                 return GetPageRoute(
-                  page: () =>  HallsView(),
-                  binding:  HallsBinding(),
+                  page: () => HallsView(),
+                  binding: HallsBinding(),
                 );
-                case Paths.tables:
+              case Paths.tables:
                 return GetPageRoute(
-                  page: () =>  TablesView(),
-                  binding:  TablesBinding(),
+                  page: () => TablesView(),
+                  binding: TablesBinding(),
                 );
-                case Paths.sizes:
+              case Paths.sizes:
                 return GetPageRoute(
-                  page: () =>  SizesView(),
-                  binding:  SizesBinding(),
+                  page: () => SizesView(),
+                  binding: SizesBinding(),
                 );
-                case Paths.deliveryZones:
+              case Paths.deliveryZones:
                 return GetPageRoute(
-                  page: () =>  DeliveryZonesView(),
-                  binding:  DeliveryZonesBinding(),
+                  page: () => DeliveryZonesView(),
+                  binding: DeliveryZonesBinding(),
+                );
+              case Paths.mainSafes:
+                return GetPageRoute(
+                  page: () => MainSafesView(),
+                  binding: MainSafesBinding(),
+                );
+              case Paths.dailyReports:
+                return GetPageRoute(
+                  page: () => DailyReportsView(),
+                  binding: DailyReportsBinding(),
+                );
+              case Paths.activityLog:
+                return GetPageRoute(
+                  page: () => ActivityLogView(),
+                  binding: ActivityLogBinding(),
                 );
 
               default:

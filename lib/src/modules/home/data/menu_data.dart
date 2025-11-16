@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-// استيراد الـ Model
 import '../models/nav_item_model.dart';
-// --- 1. استيراد المسارات الصحيحة ---
 import 'package:one_click/src/routes/app_pages.dart';
-
 
 class MenuData {
   /// القائمة الكاملة لجميع عناصر القائمة الجانبية
@@ -14,7 +11,7 @@ class MenuData {
       icon: Icons.grid_view_outlined,
       children: [
         NavSubItemModel(title: 'الوحدات', route: Routes.units),
-        NavSubItemModel(title: 'المنيوهات', route: Routes.menus), 
+        NavSubItemModel(title: 'المنيوهات', route: Routes.menus),
         NavSubItemModel(title: 'الاضافات', route: Routes.additions),
         NavSubItemModel(title: 'الأقسام', route: Routes.sections),
         NavSubItemModel(title: 'الاصناف', route: Routes.items),
@@ -36,17 +33,23 @@ class MenuData {
       title: 'الحسابات و اليومية',
       icon: Icons.calculate,
       children: [
-        NavSubItemModel(title: 'الخزائن الرئيسيه', route: '/main-safes'),
-        NavSubItemModel(title: 'اليوميات', route: '/daily-reports'),
-        NavSubItemModel(title: 'سجل النشاطات', route: '/activity-log'),
-        NavSubItemModel(title: 'الايرادات والمصروفات', route: '/income-expenses'),
+        NavSubItemModel(title: 'الخزائن الرئيسيه', route: Routes.mainSafes),
+        NavSubItemModel(title: 'اليوميات', route: Routes.dailyReports),
+        NavSubItemModel(title: 'سجل النشاطات', route: Routes.activityLog),
+        NavSubItemModel(
+          title: 'الايرادات والمصروفات',
+          route: '/income-expenses',
+        ),
         NavSubItemModel(title: 'حسابات الكابتن', route: '/captain-accounts'),
         NavSubItemModel(title: 'حسابات الطيارين', route: '/driver-accounts'),
         NavSubItemModel(title: 'المستحقات', route: '/dues'),
         NavSubItemModel(title: 'المديونيات', route: '/debts'),
         NavSubItemModel(title: 'ارباح وخسائر', route: '/profit-loss'),
         NavSubItemModel(title: 'السحب والايداع', route: '/transactions'),
-        NavSubItemModel(title: 'تقرير الخزينه الشهري', route: '/monthly-safe-report'),
+        NavSubItemModel(
+          title: 'تقرير الخزينه الشهري',
+          route: '/monthly-safe-report',
+        ),
       ],
     ),
     // 3. المبيعات
@@ -68,8 +71,14 @@ class MenuData {
       icon: Icons.shopping_cart,
       children: [
         NavSubItemModel(title: 'بحث مشتريات', route: '/search-purchases'),
-        NavSubItemModel(title: 'تجميع بالاصناف', route: '/summary-items-purchases'),
-        NavSubItemModel(title: 'تجميع بالخامات', route: '/summary-materials-purchases'),
+        NavSubItemModel(
+          title: 'تجميع بالاصناف',
+          route: '/summary-items-purchases',
+        ),
+        NavSubItemModel(
+          title: 'تجميع بالخامات',
+          route: '/summary-materials-purchases',
+        ),
       ],
     ),
     // 5. المخازن
@@ -100,8 +109,14 @@ class MenuData {
         NavSubItemModel(title: 'رواتب الموظفين', route: '/salaries'),
         NavSubItemModel(title: 'السلف', route: '/advances'),
         NavSubItemModel(title: 'السداد', route: '/payments'),
-        NavSubItemModel(title: 'استهلاك الموظفين', route: '/employee-consumption'),
-        NavSubItemModel(title: 'الحوافز والجزائات', route: '/incentives-penalties'),
+        NavSubItemModel(
+          title: 'استهلاك الموظفين',
+          route: '/employee-consumption',
+        ),
+        NavSubItemModel(
+          title: 'الحوافز والجزائات',
+          route: '/incentives-penalties',
+        ),
         NavSubItemModel(title: 'الحضور والانصراف', route: '/attendance'),
       ],
     ),
@@ -113,9 +128,18 @@ class MenuData {
         NavSubItemModel(title: 'بيانات العملاء', route: '/customers-data'),
         NavSubItemModel(title: 'سداد العملاء', route: '/customer-payments'),
         NavSubItemModel(title: 'خصم العملاء', route: '/customer-discounts'),
-        NavSubItemModel(title: 'كشف حساب العملاء', route: '/customer-statement'),
-        NavSubItemModel(title: 'العملاء الغير نشطين', route: '/inactive-customers'),
-        NavSubItemModel(title: 'كشف حساب مجمع', route: '/customer-summary-statement'),
+        NavSubItemModel(
+          title: 'كشف حساب العملاء',
+          route: '/customer-statement',
+        ),
+        NavSubItemModel(
+          title: 'العملاء الغير نشطين',
+          route: '/inactive-customers',
+        ),
+        NavSubItemModel(
+          title: 'كشف حساب مجمع',
+          route: '/customer-summary-statement',
+        ),
       ],
     ),
     // 8. إدارة الموردين
@@ -126,7 +150,10 @@ class MenuData {
         NavSubItemModel(title: 'بيانات الموردين', route: '/suppliers-data'),
         NavSubItemModel(title: 'سداد الموردين', route: '/supplier-payments'),
         NavSubItemModel(title: 'كشف حساب مورد', route: '/supplier-statement'),
-        NavSubItemModel(title: 'كشف حساب مورد مجمع', route: '/supplier-summary-statement'),
+        NavSubItemModel(
+          title: 'كشف حساب مورد مجمع',
+          route: '/supplier-summary-statement',
+        ),
       ],
     ),
     // 9. المصروفات النقدية
