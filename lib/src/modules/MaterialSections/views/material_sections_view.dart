@@ -187,7 +187,7 @@ class MaterialSectionsView extends GetView<MaterialSectionsController> { // <-- 
                 buildBodyCell(item.description, bodyStyle),
               ],
             );
-          }).toList(),
+          }),
         ],
       ),
     );

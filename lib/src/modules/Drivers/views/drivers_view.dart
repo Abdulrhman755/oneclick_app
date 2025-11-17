@@ -250,7 +250,7 @@ class DriversView extends GetView<DriversController> {
                 buildCheckboxCell(item.isDefault),
               ],
             );
-          }).toList(),
+          }),
         ],
       ),
     );

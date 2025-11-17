@@ -216,7 +216,7 @@ class PermissionsView extends GetView<PermissionsController> { // <-- (تم ال
                 buildCheckboxCell(item.isAllowed), 
               ],
             );
-          }).toList(),
+          }),
         ],
       ),
     );

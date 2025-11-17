@@ -188,7 +188,7 @@ class ItemsView extends GetView<ItemsController> {
                 buildBodyCell(item.menu, bodyStyle),
               ],
             );
-          }).toList(),
+          }),
         ],
       ),
     );

@@ -172,7 +172,7 @@ class MenusView extends GetView<MenusController> {
                 buildBodyCell(menu.name, bodyStyle),
               ],
             );
-          }).toList(),
+          }),
         ],
       ),
     );

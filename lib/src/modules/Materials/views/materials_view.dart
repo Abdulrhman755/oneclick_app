@@ -238,7 +238,7 @@ class MaterialsView extends GetView<MaterialsController> {
                 buildBodyCell(item.unit, bodyStyle),
               ],
             );
-          }).toList(),
+          }),
         ],
       ),
     );

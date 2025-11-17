@@ -187,7 +187,7 @@ class SizesView extends GetView<SizesController> { // <-- (تم التغيير)
                 buildBodyCell(item.sizeValue, bodyStyle),
               ],
             );
-          }).toList(),
+          }),
         ],
       ),
     );

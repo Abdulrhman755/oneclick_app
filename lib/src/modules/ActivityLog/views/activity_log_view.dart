@@ -242,7 +242,7 @@ class ActivityLogView extends GetView<ActivityLogController> {
                 buildBodyCell(item.username, bodyStyle),
               ],
             );
-          }).toList(),
+          }),
         ],
       ),
     );

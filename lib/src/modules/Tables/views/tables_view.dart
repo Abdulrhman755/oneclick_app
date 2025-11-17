@@ -311,7 +311,7 @@ class TablesView extends GetView<TablesController> {
                 buildBodyCell(item.hall, bodyStyle),
               ],
             );
-          }).toList(),
+          }),
         ],
       ),
     );

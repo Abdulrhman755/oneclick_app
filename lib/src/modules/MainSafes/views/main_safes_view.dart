@@ -188,7 +188,7 @@ class MainSafesView extends GetView<MainSafesController> {
                 buildBodyCell(item.openingBalance, bodyStyle),
               ],
             );
-          }).toList(),
+          }),
         ],
       ),
     );

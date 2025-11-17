@@ -193,7 +193,7 @@ class GroupsView extends GetView<GroupsController> {
                 buildBodyCell(group.sectionCount, bodyStyle),
               ],
             );
-          }).toList(),
+          }),
         ],
       ),
     );

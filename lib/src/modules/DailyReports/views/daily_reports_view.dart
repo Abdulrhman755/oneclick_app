@@ -252,7 +252,7 @@ class DailyReportsView extends GetView<DailyReportsController> { // <-- (تم ا
                 buildBodyCell(item.discrepancy, bodyStyle),
               ],
             );
-          }).toList(),
+          }),
         ],
       ),
     );

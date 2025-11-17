@@ -187,7 +187,7 @@ class HallsView extends GetView<HallsController> {
                 buildBodyCell(item.branch, bodyStyle),
               ],
             );
-          }).toList(),
+          }),
         ],
       ),
     );

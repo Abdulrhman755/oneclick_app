@@ -181,7 +181,7 @@ class UnitsView extends GetView<UnitsController> {
                 buildCheckboxCell(unit.isBaseUnit),
               ],
             );
-          }).toList(),
+          }),
         ],
       ),
     );

@@ -187,7 +187,7 @@ class DeliveryZonesView extends GetView<DeliveryZonesController> { // <-- (تم 
                 buildBodyCell(item.cost, bodyStyle),
               ],
             );
-          }).toList(),
+          }),
         ],
       ),
     );

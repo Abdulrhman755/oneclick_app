@@ -178,7 +178,7 @@ class AdditionsView extends GetView<AdditionsController> {
                 buildBodyCell(addition.isPrimary ? 'نعم' : 'لا', bodyStyle), 
               ],
             );
-          }).toList(),
+          }),
         ],
       ),
     );

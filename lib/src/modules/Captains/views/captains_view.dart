@@ -247,7 +247,7 @@ class CaptainsView extends GetView<CaptainsController> { // <-- (تم التغي
                 buildCheckboxCell(item.isDefault),
               ],
             );
-          }).toList(),
+          }),
         ],
       ),
     );

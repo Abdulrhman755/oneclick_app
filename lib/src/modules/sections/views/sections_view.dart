@@ -184,7 +184,7 @@ class SectionsView extends GetView<SectionsController> {
                 buildBodyCell(section.branch, bodyStyle),
               ],
             );
-          }).toList(),
+          }),
         ],
       ),
     );

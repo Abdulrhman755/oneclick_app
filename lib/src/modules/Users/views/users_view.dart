@@ -199,7 +199,7 @@ class UsersView extends GetView<UsersController> { // <-- (تم التغيير)
                 buildCheckboxCell(item.canLogin),
               ],
             );
-          }).toList(),
+          }),
         ],
       ),
     );
