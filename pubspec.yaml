@@ -39,6 +39,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   # الإصدار الذي طلبته لـ GetX
   get: ^4.7.2
+  dio: ^5.4.0  # للاتصال بالـ API
+  shared_preferences: ^2.2.2 # لحفظ التوكن وتسجيل الدخول
 
 dev_dependencies:
   flutter_test:
