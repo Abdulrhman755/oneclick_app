@@ -57,14 +57,21 @@ class HomeView extends GetView<HomeController> {
 
       drawer: SideNavigationBar(),
 
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          controller.scrollToTop();
-        },
-        backgroundColor: AppColors.primary,
-        child: const Icon(Icons.arrow_upward, color: Colors.white),
-      ),
-
+      floatingActionButton: Obx(() {
+        // إظهار الزر فقط إذا كنا في لوحة التحكم (Dashboard)
+        // لأن باقي الصفحات سيكون لها زر خاص في الأسفل
+        if (controller.activeSubMenuRoute.value == Routes.dashboard) {
+          return FloatingActionButton(
+            onPressed: () {
+              controller.scrollToTop();
+            },
+            backgroundColor: AppColors.primary,
+            child: const Icon(Icons.arrow_upward, color: Colors.white),
+          );
+        } else {
+          return const SizedBox.shrink(); // إخفاء الزر
+        }
+      }),
       body: SafeArea(
         child: Navigator(
           key: controller.navigatorKey,

@@ -6,6 +6,7 @@ import 'package:one_click/src/modules/home/controllers/home_controller.dart';
 import '../controllers/units_controller.dart';
 import 'package:one_click/src/shared/widgets/table_helpers.dart';
 import 'package:one_click/src/shared/widgets/filter_container.dart';
+import 'package:one_click/src/shared/widgets/fixed_pagination_bar.dart'; 
 
 class UnitsView extends GetView<UnitsController> {
   const UnitsView({super.key});
@@ -14,67 +15,80 @@ class UnitsView extends GetView<UnitsController> {
   Widget build(BuildContext context) {
     final HomeController homeController = Get.find<HomeController>();
 
-    return SingleChildScrollView(
-      controller: homeController.scrollController,
-      child: Column(
-        children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-            child: ContentHeader(),
-          ),
-          const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+    // استخدام Column لتقسيم الشاشة: محتوى + شريط سفلي
+    return Column(
+      children: [
+        // 1. المحتوى القابل للسحب (يأخذ كل المساحة المتاحة)
+        Expanded(
+          child: SingleChildScrollView(
+            controller: homeController.scrollController,
+            padding: const EdgeInsets.only(bottom: 20), // مسافة قبل الشريط
             child: Column(
               children: [
-                _buildPageTitleBar(),
-                const SizedBox(height: 20),
-                _buildFilterArea(),
-                Container(
-                  width: double.infinity,
-                  clipBehavior: Clip.antiAlias,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                  child: ContentHeader(),
+                ),
+                // const SizedBox(height: 20), 
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: Column(
                     children: [
-                      SizedBox(
+                      _buildPageTitleBar(),
+                      const SizedBox(height: 20),
+                      _buildFilterArea(),
+                      
+                      // حاوية الجدول
+                      Container(
                         width: double.infinity,
-                        // عرض مؤشر التحميل أو الجدول
-                        child: Obx(() {
-                          if (controller.isLoading.value) {
-                            return const Padding(
-                              padding: EdgeInsets.all(32.0),
-                              child: Center(child: CircularProgressIndicator()),
-                            );
-                          }
-                          return _buildCustomTable();
-                        }),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        // إخفاء الترقيم أثناء التحميل
-                        child: Obx(() => controller.isLoading.value
-                            ? const SizedBox.shrink()
-                            : _buildPaginationControls()),
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              width: double.infinity,
+                              child: Obx(() {
+                                if (controller.isLoading.value) {
+                                  return const Padding(
+                                    padding: EdgeInsets.all(32.0),
+                                    child: Center(child: CircularProgressIndicator()),
+                                  );
+                                }
+                                return _buildCustomTable();
+                              }),
+                            ),
+                            // (تم إزالة الترقيم القديم من هنا لأنه سينتقل للأسفل)
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
               ],
             ),
           ),
-        ],
-      ),
+        ),
+
+        // 2. الشريط السفلي الثابت (يظهر فقط عند اكتمال التحميل)
+        Obx(() => controller.isLoading.value
+            ? const SizedBox.shrink()
+            : FixedPaginationBar(
+                totalPages: controller.totalPages.value,
+                currentPage: controller.currentPage.value,
+                onPageChanged: (page) => controller.changePage(page),
+                onScrollToTop: () => homeController.scrollToTop(),
+              )),
+      ],
     );
   }
 
@@ -88,6 +102,7 @@ class UnitsView extends GetView<UnitsController> {
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
+            fontFamily: 'Calibri',
             color: AppColors.primary,
           ),
         ),
@@ -120,7 +135,7 @@ class UnitsView extends GetView<UnitsController> {
           alignment: Alignment.centerRight,
           child: Text(
             'اسم الوحده',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Calibri'),
           ),
         ),
         const SizedBox(height: 8),
@@ -128,6 +143,7 @@ class UnitsView extends GetView<UnitsController> {
           textAlign: TextAlign.right,
           decoration: InputDecoration(
             hintText: '...ابحث بالاسم',
+            hintStyle: const TextStyle(fontFamily: 'Calibri'),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 10,
@@ -178,7 +194,6 @@ class UnitsView extends GetView<UnitsController> {
             ],
           ),
           ...controller.pagedItems.map((unit) {
-            // إزالة الكسور الصفرية من الكمية (مثلاً 1000.0 تصبح 1000)
             String quantity = unit.quantityFromParent.toString();
             if (quantity.endsWith('.0')) {
               quantity = quantity.substring(0, quantity.length - 2);
@@ -202,43 +217,6 @@ class UnitsView extends GetView<UnitsController> {
               ],
             );
           }).toList(),
-        ],
-      ),
-    );
-  }
-
-  // --- (التعديل الهام هنا: إضافة ScrollView لمنع الخطأ) ---
-  Widget _buildPaginationControls() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal, // يسمح بالتمرير الأفقي للأزرار
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          buildPageButton(
-            onTap: () => controller.changePage(1),
-            child: const Text('الأول'),
-          ),
-          const SizedBox(width: 8),
-          
-          // أرقام الصفحات
-          ...List.generate(controller.totalPages.value, (index) {
-            final pageNum = index + 1;
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: buildPageButton(
-                isSelected: controller.currentPage.value == pageNum,
-                onTap: () => controller.changePage(pageNum),
-                child: Text('$pageNum'),
-              ),
-            );
-          }),
-          
-          const SizedBox(width: 8),
-          buildPageButton(
-            onTap: () => controller.changePage(controller.totalPages.value),
-            child: const Text('الأخير'),
-          ),
         ],
       ),
     );
