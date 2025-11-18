@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:one_click/src/shared/constants/app_colors.dart';
 import '../controllers/login_controller.dart';
 
 class LoginView extends StatefulWidget {
@@ -44,7 +43,9 @@ class _LoginViewState extends State<LoginView> {
     const Color gradientBottom = Color(0xFFBEE6FF); // أعمق قليلاً في الأسفل
     const Color cardShadowLight = Color(0x14000000); // ظل خفيف
     const Color cardShadowStrong = Color(0x1F000000); // ظل أقوى عند الفوكس
-    const Color titleColor = Color(0xFF0F3B6F); // لون العنوان (متوافق مع الخلفية الفاتحة)
+    const Color titleColor = Color(
+      0xFF0F3B6F,
+    ); // لون العنوان (متوافق مع الخلفية الفاتحة)
     const Color subtitleColor = Color(0xFF405C76); // لون النص الثانوي
 
     return Scaffold(
@@ -56,11 +57,7 @@ class _LoginViewState extends State<LoginView> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              gradientTop,
-              gradientMid,
-              gradientBottom,
-            ],
+            colors: [gradientTop, gradientMid, gradientBottom],
           ),
         ),
         child: Center(
@@ -79,10 +76,7 @@ class _LoginViewState extends State<LoginView> {
                     duration: const Duration(milliseconds: 600),
                     curve: Curves.easeOutBack,
                     builder: (context, scale, child) {
-                      return Transform.scale(
-                        scale: scale,
-                        child: child,
-                      );
+                      return Transform.scale(scale: scale, child: child);
                     },
                     child: Hero(
                       tag: 'app_logo',
@@ -102,7 +96,7 @@ class _LoginViewState extends State<LoginView> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: const [
                       Text(
-                        'مرحبا بعودتك إلى لوحة التحكم',
+                        'مرحبا بعودتك ',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 24,
@@ -132,7 +126,10 @@ class _LoginViewState extends State<LoginView> {
                     constraints: const BoxConstraints(maxWidth: 520),
                     child: Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 22),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 22,
+                        horizontal: 22,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
@@ -179,24 +176,27 @@ class _LoginViewState extends State<LoginView> {
                           _fieldWrapper(
                             focusNode: _passwordFocus,
                             focusedShadowColor: cardShadowStrong,
-                            child: Obx(() => _buildBorderedTextField(
-                                  controller: controller.passwordController,
-                                  hint: 'كلمة المرور',
-                                  icon: Icons.lock_rounded,
-                                  obscureText: controller.isPasswordHidden.value,
-                                  focusNode: _passwordFocus,
-                                  primaryColor: primaryBlue,
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      controller.isPasswordHidden.value
-                                          ? Icons.visibility_off_rounded
-                                          : Icons.visibility_rounded,
-                                      color: Colors.grey.shade600,
-                                      size: 22,
-                                    ),
-                                    onPressed: controller.togglePasswordVisibility,
+                            child: Obx(
+                              () => _buildBorderedTextField(
+                                controller: controller.passwordController,
+                                hint: 'كلمة المرور',
+                                icon: Icons.lock_rounded,
+                                obscureText: controller.isPasswordHidden.value,
+                                focusNode: _passwordFocus,
+                                primaryColor: primaryBlue,
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    controller.isPasswordHidden.value
+                                        ? Icons.visibility_off_rounded
+                                        : Icons.visibility_rounded,
+                                    color: Colors.grey.shade600,
+                                    size: 22,
                                   ),
-                                )),
+                                  onPressed:
+                                      controller.togglePasswordVisibility,
+                                ),
+                              ),
+                            ),
                           ),
 
                           const SizedBox(height: 18),
@@ -204,7 +204,11 @@ class _LoginViewState extends State<LoginView> {
                           Obx(() {
                             if (controller.isLoading.value) {
                               return const SizedBox(
-                                  height: 48, child: Center(child: CircularProgressIndicator()));
+                                height: 48,
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
                             } else {
                               return SizedBox(
                                 height: 52,
@@ -305,30 +309,30 @@ class _LoginViewState extends State<LoginView> {
           padding: const EdgeInsets.only(left: 8.0, right: 4.0),
           child: Icon(icon, color: primaryColor, size: 22),
         ),
-        prefixIconConstraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+        prefixIconConstraints: const BoxConstraints(
+          minWidth: 48,
+          minHeight: 48,
+        ),
         suffixIcon: suffixIcon,
         filled: true,
         fillColor: Colors.white,
         isDense: true,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: Colors.grey.shade300,
-            width: 1.0,
-          ),
+          borderSide: BorderSide(color: Colors.grey.shade300, width: 1.0),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: primaryColor,
-            width: 2.0,
-          ),
+          borderSide: BorderSide(color: primaryColor, width: 2.0),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: Colors.red, width: 1.0),
         ),
-        contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 18,
+          horizontal: 14,
+        ),
       ),
     );
   }

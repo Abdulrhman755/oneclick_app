@@ -1,51 +1,73 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:one_click/src/shared/constants/api_constants.dart';
+import '../../../shared/services/api_service.dart';
+import '../../../shared/models/api_response.dart'; // المودل العام
 import '../models/unit_model.dart';
 
 class UnitsController extends GetxController {
   var isFilterVisible = false.obs;
   void toggleFilterVisibility() => isFilterVisible.toggle();
 
-  // --- (جديد) منطق ترقيم الصفحات ---
-  final int itemsPerPage = 2;
-  var currentPage = 1.obs;
-
-  final List<UnitModel> _masterUnitsList = [
-    UnitModel(
-      id: '1',
-      name: 'قطعة',
-      baseUnitName: 'قطعة',
-      quantity: 1.0,
-      isBaseUnit: true,
-    ),
-    UnitModel(
-      id: '2',
-      name: 'علبة',
-      baseUnitName: 'قطعة',
-      quantity: 10.0,
-      isBaseUnit: false,
-    ),
-  ];
-
+  // متغيرات التحميل والبيانات
+  var isLoading = false.obs;
   var pagedItems = <UnitModel>[].obs;
-  late int totalPages;
+  
+  // متغيرات الترقيم (تأتي من السيرفر)
+  var currentPage = 1.obs;
+  var totalPages = 1.obs;
+  var totalCounts = 0.obs;
+  final int pageSize = 20; // كما هو في الـ JSON الخاص بك
+
+  final ApiService _apiService = ApiService();
 
   @override
   void onInit() {
     super.onInit();
-    totalPages = (_masterUnitsList.length / itemsPerPage).ceil();
-    changePage(1);
+    fetchUnits(1); // تحميل الصفحة الأولى
   }
 
-  void changePage(int pageIndex) {
-    currentPage.value = pageIndex;
-    int startIndex = (pageIndex - 1) * itemsPerPage;
-    int endIndex = (startIndex + itemsPerPage);
-    
-    if (endIndex > _masterUnitsList.length) {
-      endIndex = _masterUnitsList.length;
+  Future<void> fetchUnits(int pageNumber) async {
+    isLoading.value = true;
+    try {
+      // 1. طلب البيانات من السيرفر (تأكد من الرابط الصحيح للوحدات)
+      // افترضت أن الرابط هو /api/Units حسب ملف JSON، عدله لو مختلف
+      final response = await _apiService.get(
+        ApiConstants.units, 
+        queryParameters: {
+          'PageNumber': pageNumber,
+          'PageSize': pageSize,
+        },
+      );
+
+      // 2. تحويل الرد باستخدام المودل العام
+      final apiResponse = ApiResponse<UnitModel>.fromJson(
+        response.data,
+        (json) => UnitModel.fromJson(json),
+      );
+
+      // 3. تحديث البيانات في الكنترولر
+      pagedItems.assignAll(apiResponse.data);
+      currentPage.value = apiResponse.pageNumber;
+      totalPages.value = apiResponse.totalPages;
+      totalCounts.value = apiResponse.totalCounts;
+
+    } catch (e) {
+      Get.snackbar(
+        'خطأ',
+        'فشل تحميل الوحدات: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
     }
-    pagedItems.assignAll(
-      _masterUnitsList.sublist(startIndex, endIndex),
-    );
+  }
+
+  // دالة تغيير الصفحة (تستدعي الـ API)
+  void changePage(int pageIndex) {
+    if (pageIndex >= 1 && pageIndex <= totalPages.value) {
+      fetchUnits(pageIndex);
+    }
   }
 }

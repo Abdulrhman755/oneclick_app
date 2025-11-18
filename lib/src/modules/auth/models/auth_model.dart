@@ -6,7 +6,7 @@ class AuthModel {
   
   factory AuthModel.fromJson(Map<String, dynamic> json) {
     return AuthModel(
-      token: json['token'] ?? '',
+      token: json['JwtToken'] ?? '',
       expiration: json['expiration'] ?? '',
     );
   }

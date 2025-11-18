@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:one_click/src/shared/constants/app_colors.dart';
 import 'package:one_click/src/shared/widgets/content_header.dart';
-import 'package:one_click/src/modules/home/controllers/home_controller.dart'; 
-import '../controllers/units_controller.dart'; 
+import 'package:one_click/src/modules/home/controllers/home_controller.dart';
+import '../controllers/units_controller.dart';
 import 'package:one_click/src/shared/widgets/table_helpers.dart';
 import 'package:one_click/src/shared/widgets/filter_container.dart';
 
@@ -29,13 +29,13 @@ class UnitsView extends GetView<UnitsController> {
               children: [
                 _buildPageTitleBar(),
                 const SizedBox(height: 20),
-                _buildFilterArea(), 
+                _buildFilterArea(),
                 Container(
                   width: double.infinity,
-                  clipBehavior: Clip.antiAlias, 
+                  clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(16.0), 
+                    borderRadius: BorderRadius.circular(16.0),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black12,
@@ -48,11 +48,23 @@ class UnitsView extends GetView<UnitsController> {
                     children: [
                       SizedBox(
                         width: double.infinity,
-                        child: Obx(() => _buildCustomTable()), 
+                        // عرض مؤشر التحميل أو الجدول
+                        child: Obx(() {
+                          if (controller.isLoading.value) {
+                            return const Padding(
+                              padding: EdgeInsets.all(32.0),
+                              child: Center(child: CircularProgressIndicator()),
+                            );
+                          }
+                          return _buildCustomTable();
+                        }),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        child: Obx(() => _buildPaginationControls()),
+                        // إخفاء الترقيم أثناء التحميل
+                        child: Obx(() => controller.isLoading.value
+                            ? const SizedBox.shrink()
+                            : _buildPaginationControls()),
                       ),
                     ],
                   ),
@@ -71,7 +83,7 @@ class UnitsView extends GetView<UnitsController> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         const Text(
-          'الوحدات', 
+          'الوحدات',
           textAlign: TextAlign.right,
           style: TextStyle(
             fontSize: 24,
@@ -97,11 +109,12 @@ class UnitsView extends GetView<UnitsController> {
     );
   }
 
-  // --- 🌟 (تم التعديل) استخدام Align 🌟 ---
   Widget _buildFilterArea() {
     return FilterContainer(
       isVisible: controller.isFilterVisible,
-      onSearchPressed: () { /* TODO: Apply filter */ },
+      onSearchPressed: () {
+        // TODO: استدعاء دالة البحث
+      },
       filterFields: [
         const Align(
           alignment: Alignment.centerRight,
@@ -115,9 +128,7 @@ class UnitsView extends GetView<UnitsController> {
           textAlign: TextAlign.right,
           decoration: InputDecoration(
             hintText: '...ابحث بالاسم',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 10,
               vertical: 8,
@@ -131,13 +142,13 @@ class UnitsView extends GetView<UnitsController> {
 
   Widget _buildCustomTable() {
     const TextStyle headerStyle = TextStyle(
-      fontSize: 13.0, 
+      fontSize: 13.0,
       color: Colors.white,
       fontWeight: FontWeight.bold,
       fontFamily: 'Calibri',
     );
     const TextStyle bodyStyle = TextStyle(
-      fontSize: 12.0, 
+      fontSize: 12.0,
       color: Colors.black87,
       fontFamily: 'Calibri',
       fontWeight: FontWeight.bold,
@@ -167,52 +178,69 @@ class UnitsView extends GetView<UnitsController> {
             ],
           ),
           ...controller.pagedItems.map((unit) {
+            // إزالة الكسور الصفرية من الكمية (مثلاً 1000.0 تصبح 1000)
+            String quantity = unit.quantityFromParent.toString();
+            if (quantity.endsWith('.0')) {
+              quantity = quantity.substring(0, quantity.length - 2);
+            }
+
             return TableRow(
               decoration: BoxDecoration(
                 color: controller.pagedItems.indexOf(unit).isEven
                     ? Colors.white
-                    : Colors.grey.shade50, 
+                    : Colors.grey.shade50,
               ),
               children: [
-                buildBodyCell(unit.id.toString(), bodyStyle),
+                buildBodyCell(
+                  (controller.pagedItems.indexOf(unit) + 1).toString(),
+                  bodyStyle,
+                ),
                 buildBodyCell(unit.name, bodyStyle),
-                buildBodyCell(unit.baseUnitName, bodyStyle),
-                buildBodyCell(unit.quantity.toString(), bodyStyle),
-                buildCheckboxCell(unit.isBaseUnit),
+                buildBodyCell(unit.parentUnitName, bodyStyle),
+                buildBodyCell(quantity, bodyStyle),
+                buildCheckboxCell(unit.isMainUnit),
               ],
             );
-          }),
+          }).toList(),
         ],
       ),
     );
   }
 
+  // --- (التعديل الهام هنا: إضافة ScrollView لمنع الخطأ) ---
   Widget _buildPaginationControls() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        buildPageButton(
-          onTap: () => controller.changePage(1),
-          child: const Text('الأول'),
-        ),
-        const SizedBox(width: 8),
-        ...List.generate(controller.totalPages, (index) {
-          final pageNum = index + 1;
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: buildPageButton(
-              isSelected: controller.currentPage.value == pageNum,
-              onTap: () => controller.changePage(pageNum),
-              child: Text('$pageNum'),
-            ),
-          );
-        }),
-        const SizedBox(width: 8),
-        buildPageButton(
-          onTap: () => controller.changePage(controller.totalPages),
-          child: const Text('الأخير'),
-        ),
-      ],
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal, // يسمح بالتمرير الأفقي للأزرار
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          buildPageButton(
+            onTap: () => controller.changePage(1),
+            child: const Text('الأول'),
+          ),
+          const SizedBox(width: 8),
+          
+          // أرقام الصفحات
+          ...List.generate(controller.totalPages.value, (index) {
+            final pageNum = index + 1;
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: buildPageButton(
+                isSelected: controller.currentPage.value == pageNum,
+                onTap: () => controller.changePage(pageNum),
+                child: Text('$pageNum'),
+              ),
+            );
+          }),
+          
+          const SizedBox(width: 8),
+          buildPageButton(
+            onTap: () => controller.changePage(controller.totalPages.value),
+            child: const Text('الأخير'),
+          ),
+        ],
+      ),
     );
   }
 }
